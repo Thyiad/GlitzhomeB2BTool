@@ -24,14 +24,23 @@ namespace GlitzhomeB2BTool
         private List<string> enKeys = new List<string>();
         private List<string> zhKeys = new List<string>();
 
+        private List<string> GetFiles()
+        {
+            List<string> files = new List<string>();
+            var txt = txtFile.Text.Trim();
+            files = Regex.Split(txt, Environment.NewLine).ToList();
+
+            return files;
+        }
+
+        #region 多语言
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
             keys.Clear();
 
-            var txt = txtFile.Text.Trim();
-            if (string.IsNullOrEmpty(txt)) return;
+            var files = GetFiles();
+            if (files.Count == 0) return;
 
-            var files =  Regex.Split(txt,Environment.NewLine);
             foreach (var file in files)
             {
                 if (Directory.Exists(file))
@@ -90,7 +99,7 @@ namespace GlitzhomeB2BTool
             StringBuilder builder = new StringBuilder();
             foreach (var item in keys)
             {
-                if(!existKeys.Contains(item))
+                if (!existKeys.Contains(item))
                     builder.AppendLine(string.Format("'{0}' => '',", item));
             }
             txtOut.Text = builder.ToString();
@@ -123,14 +132,18 @@ namespace GlitzhomeB2BTool
                 }
             }
         }
+        private void ckZH_CheckedChanged(object sender, EventArgs e)
+        {
+            Out();
+        }
+        #endregion
 
+        #region label转ui Msglabel = 'xxx' 转到uiMsg方法中的'xxx'=>Yii::t('app','xxx')
         private List<string> labels = new List<string>();
         private void label2model_Click(object sender, EventArgs e)
         {
-            var txt = txtFile.Text.Trim();
-            if (string.IsNullOrEmpty(txt)) return;
-
-            var files = Regex.Split(txt, Environment.NewLine);
+            var files = GetFiles();
+            if (files.Count == 0) return;
             foreach (var file in files)
             {
                 if (Directory.Exists(file))
@@ -151,7 +164,7 @@ namespace GlitzhomeB2BTool
             StringBuilder builder = new StringBuilder();
             foreach (var item in labels)
             {
-                builder.AppendLine(string.Format("'{0}'=>Yii::t('app','{0}'),",item));
+                builder.AppendLine(string.Format("'{0}'=>Yii::t('app','{0}'),", item));
             }
             txtOut.Text = builder.ToString();
         }
@@ -168,10 +181,95 @@ namespace GlitzhomeB2BTool
                 }
             }
         }
+        #endregion
 
-        private void ckZH_CheckedChanged(object sender, EventArgs e)
+
+        #region attributes转换成formData
+        private void btnAttr2formData_Click(object sender, EventArgs e)
         {
-            Out();
+            attrs.Clear();
+            if (ckInnerText.Checked)
+            {
+                foreach (var line in Regex.Split(txtFile.Text, Environment.NewLine))
+                {
+                    if (regexAttr.IsMatch(line))
+                    {
+                        string key = regexAttr.Match(line).Groups[1].Value;
+                        if (!attrs.Contains(key)) attrs.Add(key);
+                    }
+                }
+            }
+            else
+            {
+                var files = GetFiles();
+                if (files.Count == 0) return;
+                foreach (var file in files)
+                {
+                    if (Directory.Exists(file))
+                    {
+                        foreach (var item in Directory.GetFiles(file))
+                        {
+                            AnalyzeAttribute(item);
+                        }
+                    }
+                    else if (File.Exists(file))
+                    {
+                        AnalyzeAttribute(file);
+                    }
+                }
+            }
+            
+            txtOut.Text = "";
+            StringBuilder builder = new StringBuilder();
+            foreach (var item in attrs)
+            {
+                builder.AppendLine("[");
+                builder.AppendLine(string.Format("'label' => Yii::t('app','{0}'),", item));
+                builder.AppendLine(string.Format("'name' => '{0}',", item));
+                builder.AppendLine("'type' => 'text',");
+                builder.AppendLine("'required' => false,");
+                builder.AppendLine("'disabled' => $type==='view'?true:false,");
+                builder.AppendLine("// 'format' => 'digits, number, email, url',");
+                builder.AppendLine("// 'trim' => false,");
+                builder.AppendLine("// 'minlength' => 1,");
+                builder.AppendLine("// 'maxlength' => 10,");
+                builder.AppendLine("// 'regex' => '/pattern/',");
+                builder.AppendLine("// 'unique' => 'controller/action',");
+                builder.AppendLine("// 'reject' => false,");
+                builder.AppendLine("],");
+            }
+            txtOut.Text = builder.ToString();
         }
+
+        private Regex regexAttr = new Regex("(?:'|\")([^ '\"]+)(?:'|\"),");
+        private List<string> attrs = new List<string>();
+        private void AnalyzeAttribute(string file)
+        {
+            bool beginMethod = false;
+            foreach (var line in File.ReadAllLines(file))
+            {
+                if (Regex.IsMatch(line, @"public\s+function\s+attributes\(\)"))
+                {
+                    beginMethod = true;
+                    continue;
+                }
+                else if (beginMethod && line.Trim() == "}")
+                {
+                    break;
+                }
+                else if (beginMethod && regexAttr.IsMatch(line))
+                {
+                    var match = regexAttr.Match(line);
+
+                    while (match.Success)
+                    {
+                        string key = match.Groups[1].Value;
+                        if (!attrs.Contains(key)) attrs.Add(key);
+                        match = match.NextMatch();
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

@@ -37,6 +37,8 @@
             this.ckZH = new System.Windows.Forms.CheckBox();
             this.label2model = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnAttr2formData = new System.Windows.Forms.Button();
+            this.ckInnerText = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -56,7 +58,7 @@
             // 
             // btnAnalyze
             // 
-            this.btnAnalyze.Location = new System.Drawing.Point(435, 45);
+            this.btnAnalyze.Location = new System.Drawing.Point(498, 45);
             this.btnAnalyze.Name = "btnAnalyze";
             this.btnAnalyze.Size = new System.Drawing.Size(75, 23);
             this.btnAnalyze.TabIndex = 3;
@@ -108,7 +110,7 @@
             // 
             // label2model
             // 
-            this.label2model.Location = new System.Drawing.Point(140, 45);
+            this.label2model.Location = new System.Drawing.Point(29, 49);
             this.label2model.Name = "label2model";
             this.label2model.Size = new System.Drawing.Size(209, 23);
             this.label2model.TabIndex = 7;
@@ -135,11 +137,33 @@
             this.splitContainer1.SplitterDistance = 450;
             this.splitContainer1.TabIndex = 8;
             // 
+            // btnAttr2formData
+            // 
+            this.btnAttr2formData.Location = new System.Drawing.Point(275, 49);
+            this.btnAttr2formData.Name = "btnAttr2formData";
+            this.btnAttr2formData.Size = new System.Drawing.Size(116, 23);
+            this.btnAttr2formData.TabIndex = 9;
+            this.btnAttr2formData.Text = "attr2formData";
+            this.btnAttr2formData.UseVisualStyleBackColor = true;
+            this.btnAttr2formData.Click += new System.EventHandler(this.btnAttr2formData_Click);
+            // 
+            // ckInnerText
+            // 
+            this.ckInnerText.AutoSize = true;
+            this.ckInnerText.Location = new System.Drawing.Point(409, 52);
+            this.ckInnerText.Name = "ckInnerText";
+            this.ckInnerText.Size = new System.Drawing.Size(78, 16);
+            this.ckInnerText.TabIndex = 10;
+            this.ckInnerText.Text = "innerText";
+            this.ckInnerText.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(919, 562);
+            this.Controls.Add(this.ckInnerText);
+            this.Controls.Add(this.btnAttr2formData);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label2model);
             this.Controls.Add(this.ckZH);
@@ -169,6 +193,8 @@
         private System.Windows.Forms.CheckBox ckZH;
         private System.Windows.Forms.Button label2model;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button btnAttr2formData;
+        private System.Windows.Forms.CheckBox ckInnerText;
     }
 }
 
