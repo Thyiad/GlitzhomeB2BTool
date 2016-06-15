@@ -271,5 +271,13 @@ namespace GlitzhomeB2BTool
             }
         }
         #endregion
+
+        private void txtFile_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.A && e.Control)
+            {
+                (sender as TextBox).SelectAll();
+            }
+        }
     }
 }

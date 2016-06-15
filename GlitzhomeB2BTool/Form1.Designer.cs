@@ -55,6 +55,7 @@
             this.txtFile.Size = new System.Drawing.Size(450, 461);
             this.txtFile.TabIndex = 0;
             this.txtFile.Text = resources.GetString("txtFile.Text");
+            this.txtFile.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtFile_KeyDown);
             // 
             // btnAnalyze
             // 
@@ -75,6 +76,7 @@
             this.txtOut.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtOut.Size = new System.Drawing.Size(441, 461);
             this.txtOut.TabIndex = 1;
+            this.txtOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtFile_KeyDown);
             // 
             // label1
             // 
